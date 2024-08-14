@@ -9,7 +9,7 @@ import de.sprenger.weatherwarningapp.model.WeatherWarningData
 import de.sprenger.weatherwarningapp.repository.NinaApiRepository
 import kotlinx.coroutines.launch
 
-class WeatherWarningViewModel: ViewModel() {
+class WeatherViewModel: ViewModel() {
     lateinit var repository: NinaApiRepository
 
     private val _warnings = MutableLiveData<List<WeatherWarningData>>()
