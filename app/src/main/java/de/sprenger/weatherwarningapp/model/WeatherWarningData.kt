@@ -2,7 +2,7 @@ package de.sprenger.weatherwarningapp.model
 
 import com.google.gson.annotations.SerializedName
 
-data class WarningData(
+data class WeatherWarningData(
     val id: String,
     val version: Int,
     val startDate: String,

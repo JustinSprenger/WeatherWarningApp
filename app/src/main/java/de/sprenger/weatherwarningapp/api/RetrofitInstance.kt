@@ -10,5 +10,5 @@ object RetrofitInstance {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val warningService: GetWarningService = retrofit.create(GetWarningService::class.java)
+    val warningService: GetWeatherWarningService = retrofit.create(GetWeatherWarningService::class.java)
 }

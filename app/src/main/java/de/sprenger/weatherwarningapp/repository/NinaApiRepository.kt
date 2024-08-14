@@ -1,16 +1,15 @@
 package de.sprenger.weatherwarningapp.repository
 
-import de.sprenger.weatherwarningapp.api.GetWarningService
-import de.sprenger.weatherwarningapp.api.RetrofitInstance
-import de.sprenger.weatherwarningapp.model.WarningData
+import de.sprenger.weatherwarningapp.api.GetWeatherWarningService
+import de.sprenger.weatherwarningapp.model.WeatherWarningData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-class WarningRepository(private val warningService: GetWarningService) {
-    suspend fun getKatwarn(): List<WarningData>? {
+class NinaApiRepository(private val warningService: GetWeatherWarningService) {
+    suspend fun getKatwarn(): List<WeatherWarningData>? {
         return try {
-            val response: Response<List<WarningData>> = warningService.getKatwarn().execute()
+            val response: Response<List<WeatherWarningData>> = warningService.getKatwarn().execute()
 
             if (response.isSuccessful) response.body()
             else null
@@ -20,9 +19,9 @@ class WarningRepository(private val warningService: GetWarningService) {
         }
     }
 
-    suspend fun getBiwapp(): List<WarningData>? {
+    suspend fun getBiwapp(): List<WeatherWarningData>? {
         return try {
-            val response: Response<List<WarningData>> = warningService.getBiwapp().execute()
+            val response: Response<List<WeatherWarningData>> = warningService.getBiwapp().execute()
             if (response.isSuccessful) response.body()
             else null
         } catch (e: Exception) {
@@ -31,9 +30,9 @@ class WarningRepository(private val warningService: GetWarningService) {
         }
     }
 
-    suspend fun getMowas(): List<WarningData>? {
+    suspend fun getMowas(): List<WeatherWarningData>? {
         return try {
-            val response: Response<List<WarningData>> = warningService.getMowas().execute()
+            val response: Response<List<WeatherWarningData>> = warningService.getMowas().execute()
 
             if (response.isSuccessful) response.body()
             else null
@@ -43,10 +42,10 @@ class WarningRepository(private val warningService: GetWarningService) {
         }
     }
 
-    suspend fun getDwd(): List<WarningData>? {
+    suspend fun getDwd(): List<WeatherWarningData>? {
         return withContext(Dispatchers.IO) {
             try {
-                val response: Response<List<WarningData>> = warningService.getDwd().execute()
+                val response: Response<List<WeatherWarningData>> = warningService.getDwd().execute()
 
                 if (response.isSuccessful) response.body()
                 else null

@@ -3,43 +3,26 @@ package de.sprenger.weatherwarningapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import de.sprenger.weatherwarningapp.api.GetWarningService
 import de.sprenger.weatherwarningapp.api.RetrofitInstance
-import de.sprenger.weatherwarningapp.model.WarningData
-import de.sprenger.weatherwarningapp.repository.WarningRepository
+import de.sprenger.weatherwarningapp.repository.NinaApiRepository
 import de.sprenger.weatherwarningapp.ui.theme.WeatherWarningAppTheme
-import de.sprenger.weatherwarningapp.viewmodel.WarningViewModel
+import de.sprenger.weatherwarningapp.viewmodel.WeatherWarningViewModel
 
 class MainActivity : ComponentActivity() {
-    private lateinit var viewModel: WarningViewModel
+    private lateinit var viewModel: WeatherWarningViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = WarningRepository(RetrofitInstance.warningService)
-        viewModel = ViewModelProvider(this).get(WarningViewModel::class.java).apply {
+        val repository = NinaApiRepository(RetrofitInstance.warningService)
+        viewModel = ViewModelProvider(this).get(WeatherWarningViewModel::class.java).apply {
             this.repository = repository
         }
 
@@ -60,7 +43,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun WarningContainer(viewModel: WarningViewModel) {
+fun WarningContainer(viewModel: WeatherWarningViewModel) {
     val mapData = viewModel.warnings.observeAsState()
     val errorMessage = viewModel.errorMessage.observeAsState()
 

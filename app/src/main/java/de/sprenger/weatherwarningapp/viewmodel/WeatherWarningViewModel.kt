@@ -5,15 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.sprenger.weatherwarningapp.model.WarningData
-import de.sprenger.weatherwarningapp.repository.WarningRepository
+import de.sprenger.weatherwarningapp.model.WeatherWarningData
+import de.sprenger.weatherwarningapp.repository.NinaApiRepository
 import kotlinx.coroutines.launch
 
-class WarningViewModel: ViewModel() {
-    lateinit var repository: WarningRepository
+class WeatherWarningViewModel: ViewModel() {
+    lateinit var repository: NinaApiRepository
 
-    private val _warnings = MutableLiveData<List<WarningData>>()
-    val warnings: LiveData<List<WarningData>> get() = _warnings
+    private val _warnings = MutableLiveData<List<WeatherWarningData>>()
+    val warnings: LiveData<List<WeatherWarningData>> get() = _warnings
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
