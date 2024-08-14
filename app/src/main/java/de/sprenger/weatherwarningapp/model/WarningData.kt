@@ -1,5 +1,7 @@
 package de.sprenger.weatherwarningapp.model
 
+import com.google.gson.annotations.SerializedName
+
 data class WarningData(
     val id: String,
     val version: Int,
@@ -8,6 +10,7 @@ data class WarningData(
     val severity: String,
     val urgency: String,
     val type: String,
+    @SerializedName("i18nTitle")
     val title: Title,
     val transKeys: TransKey?
 )
