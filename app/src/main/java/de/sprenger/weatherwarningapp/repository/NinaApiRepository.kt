@@ -8,37 +8,44 @@ import retrofit2.Response
 
 class NinaApiRepository(private val warningService: GetWeatherWarningService) {
     suspend fun getKatwarn(): List<WeatherWarningData>? {
-        return try {
-            val response: Response<List<WeatherWarningData>> = warningService.getKatwarn().execute()
+        return withContext(Dispatchers.IO) {
+            try {
+                val response: Response<List<WeatherWarningData>> = warningService.getKatwarn().execute()
 
-            if (response.isSuccessful) response.body()
-            else null
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+                if (response.isSuccessful) response.body()
+                else null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 
     suspend fun getBiwapp(): List<WeatherWarningData>? {
-        return try {
-            val response: Response<List<WeatherWarningData>> = warningService.getBiwapp().execute()
-            if (response.isSuccessful) response.body()
-            else null
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+        return withContext(Dispatchers.IO) {
+            try {
+                val response: Response<List<WeatherWarningData>> = warningService.getBiwapp().execute()
+                if (response.isSuccessful) response.body()
+                else null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 
     suspend fun getMowas(): List<WeatherWarningData>? {
-        return try {
-            val response: Response<List<WeatherWarningData>> = warningService.getMowas().execute()
+        return withContext(Dispatchers.IO) {
+            try {
+                val response: Response<List<WeatherWarningData>> =
+                    warningService.getMowas().execute()
 
-            if (response.isSuccessful) response.body()
-            else null
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+                if (response.isSuccessful) response.body()
+                else null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 
