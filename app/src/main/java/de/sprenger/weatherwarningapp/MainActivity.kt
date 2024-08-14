@@ -71,7 +71,7 @@ fun WarningContainer(viewModel: WeatherViewModel) {
 
     mapData.value?.let { data ->
         for (weatherWarning: WeatherWarningData in data) {
-            weatherWarning.title.de?.let { Text(text = it, fontSize = 12.sp) }
+            weatherWarning.title?.de?.let { Text(text = it, fontSize = 12.sp) }
         }
     }
     errorMessage.value?.let { error ->
