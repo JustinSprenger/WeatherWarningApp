@@ -1,54 +1,72 @@
 package de.sprenger.weatherwarningapp
 
 import de.sprenger.weatherwarningapp.api.GetWeatherWarningService
-import de.sprenger.weatherwarningapp.model.Title
 import de.sprenger.weatherwarningapp.model.WeatherWarningData
-import de.sprenger.weatherwarningapp.repository.NinaApiRepository
-import kotlinx.coroutines.runBlocking
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
+import retrofit2.Call
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 class NinaApiRepositoryTest {
-    private val mockApiService = mock(GetWeatherWarningService::class.java)
-    private val repository = NinaApiRepository(mockApiService)
+    private lateinit var mockWebServer: MockWebServer
+    private lateinit var service: GetWeatherWarningService
 
-    @Test
-    fun `test successful data fetch`() = runBlocking {
-        val mockData = listOf(
-            WeatherWarningData(
-                id = "dwdmap.2.49.0.0.276.0.DWD.PVW.1723584780000.b679bf4b-9ff9-4d10-9134-f0fdbfb0e41e.MUL",
-                version = 5,
-                startDate = "2024-08-13T23:33:00+02:00",
-                expiresDate = "2024-08-13T23:33:00+02:00",
-                severity = "Severe",
-                urgency = "Immediate",
-                type = "Alert",
-                title = Title("Unit test"))
-        )
-//        val mockResponse = Response.success(mockData)
-//        `when`(mockApiService.getDwd().execute()).thenReturn(mockResponse)
+    @Before
+    fun setUp() {
+        mockWebServer = MockWebServer()
+        mockWebServer.start()
 
-        println("MockApiService: $mockApiService")
-        val response = mockApiService.getDwd().execute()
-        println("Response: $response")
+        val retrofit = Retrofit.Builder()
+            .baseUrl(mockWebServer.url("/")) // Die URL des MockWebServer
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-        val result = repository.getDwd()
+        service = retrofit.create(GetWeatherWarningService::class.java)
+    }
 
-        // Assert
-        assertEquals(mockData, result)
+    @After
+    fun tearDown() {
+        mockWebServer.shutdown()
     }
 
     @Test
-    fun `test 500 error`() = runBlocking {
-        val mockResponse: Response<List<WeatherWarningData>> = Response.error(500, okhttp3.ResponseBody.create(null, ""))
-        `when`(mockApiService.getDwd().execute()).thenReturn(mockResponse)
+    fun `test getDwd success`() {
+        val jsonResponse = """
+            [
+                {
+                    "id": "biw.BIWAPP-83896",
+                    "version": 5,
+                    "startDate": "2024-08-13T10:45:42+02:00",
+                    "expiresDate": "2024-08-14T10:26:00+02:00",
+                    "severity": "Minor",
+                    "urgency": "Unknown",
+                    "type": "Update",
+                    "i18nTitle": {
+                        "de": "Hitzewarnung für den gesamten Landkreis Holzminden!"
+                    }
+                }
+            ]
+        """.trimIndent()
 
-        val result = repository.getDwd()
+        mockWebServer.enqueue(
+            MockResponse()
+            .setBody(jsonResponse)
+            .setResponseCode(200))
 
-        // Assert
-        assertNull(result)
+        val call: Call<List<WeatherWarningData>> = service.getDwd()
+        val response: Response<List<WeatherWarningData>> = call.execute()
+
+        assertTrue(response.isSuccessful)
+        assertNotNull(response.body())
+        assertEquals(5, response.body()?.first()?.version ?: 0)
     }
 }
